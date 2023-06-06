@@ -7,6 +7,11 @@ server:
 spring:
   application:
     name: ORDER-SERVICE
+  rabbitmq:
+    host: rabbitmq
+    port: 5672
+    username: guest
+    password: guest
   data:
     mongodb:
       host: '${MONGO_HOST:localhost}'
@@ -30,7 +35,7 @@ eureka:
 #    name: order-service
 #  data:
 #    mongodb:
-#      host: mongo-productdb
+#      host: mongo-orderdb
 #      port: 27017
 #      database: order
 #
