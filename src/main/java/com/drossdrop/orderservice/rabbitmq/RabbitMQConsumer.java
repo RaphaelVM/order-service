@@ -19,8 +19,8 @@ public class RabbitMQConsumer {
 //        log.info("Received Message: " + message);
 //    }
 
-    @RabbitListener(queues = "createProductQueue")
-    public void receiveCreateProductCommand(String json) {
+    @RabbitListener(queues = "myQueue")
+    public void receiveProduct(String json) {
         ObjectMapper objectMapper = new ObjectMapper();
         Product product = null;
         try {
