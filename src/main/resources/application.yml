@@ -1,0 +1,41 @@
+### Global
+server:
+  port: 9102
+### End Global
+
+### Kubernetes
+spring:
+  application:
+    name: ORDER-SERVICE
+  data:
+    mongodb:
+      host: '${MONGO_HOST:localhost}'
+      port: 27017
+      database: '${MONGO_DB:order}'
+
+eureka:
+  instance:
+    preferIpAddress: true
+    hostname: eureka-0
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: http://eureka-0.eureka.default.svc.cluster.local:8761/eureka
+### End Kubernetes
+
+### Local
+#spring:
+#  application:
+#    name: order-service
+#  data:
+#    mongodb:
+#      host: mongo-productdb
+#      port: 27017
+#      database: order
+#
+#eureka:
+#  client:
+#    serviceUrl:
+#      defaultZone: http://discovery-server:8761/eureka/
+### End Local
