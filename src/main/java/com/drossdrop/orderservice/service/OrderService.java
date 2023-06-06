@@ -26,7 +26,7 @@ public class OrderService {
         String productId = orderRequest.getProductId();
 //        BigDecimal totalPrice = productRepository.findById(productId).get().getPrice().multiply(BigDecimal.valueOf(orderRequest.getQuantity()));
         BigDecimal totalPrice = BigDecimal.valueOf(orderRequest.getQuantity()*2);
-        
+
         Order order = Order.builder()
                 .productId(productId)
                 .userId(orderRequest.getUserId())

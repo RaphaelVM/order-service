@@ -1,15 +1,15 @@
 version: "3.8"
 services:
-  product-service:
+  order-service:
     build: .
     restart: always
     depends_on:
-      - mongo-productdb
+      - mongo-orderdb
     networks:
       default:
         aliases:
           - rmqnet
-  mongo-productdb:
+  mongo-orderdb:
     image: "mongo:latest"
     restart: always
     ports:
