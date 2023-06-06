@@ -14,10 +14,10 @@ public class RabbitMQConsumer {
 
     private ProductService productService;
 
-    @RabbitListener(queues = "myQueue")
-    public void receiveMessage(String message) {
-        log.info("Received Message: " + message);
-    }
+//    @RabbitListener(queues = "myQueue")
+//    public void receiveMessage(String message) {
+//        log.info("Received Message: " + message);
+//    }
 
     @RabbitListener(queues = "createProductQueue")
     public void receiveCreateProductCommand(String json) {
