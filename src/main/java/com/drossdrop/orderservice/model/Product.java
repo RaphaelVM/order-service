@@ -19,13 +19,12 @@ public class Product {
     private String id;
     private String name;
     private BigDecimal price;
-    private Integer quantity;
     private Integer stock;
 
     @Override
     public String toString() {
         return String.format(
-                "Product[id=%s, name='%s', price='%s', quantity='%s stock='%s']",
-                id, name, price, quantity, stock);
+                "Product[id=%s, name='%s', price='%s', stock='%s']",
+                id, name, price, stock);
     }
 }
