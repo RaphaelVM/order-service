@@ -5,6 +5,8 @@ import com.drossdrop.orderservice.service.ProductService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
@@ -12,23 +14,28 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class RabbitMQConsumer {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(RabbitMQConsumer.class);
+
     private ProductService productService;
 
-//    @RabbitListener(queues = "myQueue")
-//    public void receiveMessage(String message) {
-//        log.info("Received Message: " + message);
-//    }
-
-    @RabbitListener(queues = "myQueue")
-    public void receiveProduct(String json) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        Product product = null;
-        try {
-            product = objectMapper.readValue(json, Product.class);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+    @RabbitListener(queues = "product_json")
+    public void receiveProduct(Product product) {
+        LOGGER.info(String.format("Received message... -> %s", product.toString()));
         productService.createProduct(product);
-        log.info("Product is {} created", product);
     }
+
+//    @RabbitListener(queues = "product")
+//    public void receiveProduct(String json) {
+//        LOGGER.info(String.format("Received message... -> %s", json));
+//
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        Product product = null;
+//        try {
+//            product = objectMapper.readValue(json, Product.class);
+//        } catch (JsonProcessingException e) {
+//            throw new RuntimeException(e);
+//        }
+//        productService.createProduct(product);
+//        log.info("Product is {} created", product);
+//    }
 }
