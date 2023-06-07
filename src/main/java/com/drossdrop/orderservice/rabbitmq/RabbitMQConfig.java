@@ -12,32 +12,46 @@ import org.springframework.context.annotation.Configuration;
 class RabbitMQConfig {
 
     @Bean
-    public Queue queue() {
+    public Queue productQueue() {
         return new Queue("product");
     }
 
     @Bean
-    public Queue jsonQueue() {
+    public Queue productJsonQueue() {
         return new Queue("product_json");
     }
 
     @Bean
-    public TopicExchange exchange() { return new TopicExchange("product_exchange");}
+    public Queue userJsonQueue() { return new Queue("user_json"); }
 
     @Bean
-    public Binding binding() {
+    public TopicExchange productExchange() { return new TopicExchange("product_exchange");}
+
+    @Bean
+    public TopicExchange userExchange() { return new TopicExchange("user_exchange");}
+
+    @Bean
+    public Binding productBinding() {
         return BindingBuilder
-                .bind(queue())
-                .to(exchange())
+                .bind(productQueue())
+                .to(productExchange())
                 .with("product_routing_key");
     }
 
     @Bean
-    public Binding jsonBinding() {
+    public Binding productJsonBinding() {
         return BindingBuilder
-                .bind(jsonQueue())
-                .to(exchange())
+                .bind(productJsonQueue())
+                .to(productExchange())
                 .with("product_routing_json_key");
+    }
+
+    @Bean
+    public Binding userJsonBinding() {
+        return BindingBuilder
+                .bind(userJsonQueue())
+                .to(userExchange())
+                .with("user_routing_json_key");
     }
 
     @Bean
