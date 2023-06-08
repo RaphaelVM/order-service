@@ -21,7 +21,7 @@ public class OrderController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<String> createOrder(@RequestBody OrderRequest orderRequest) {
         String order = orderService.createOrder(orderRequest);
-        
+
         if (order.contains("does not exist")) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Product does not exist");
         } else if (order.contains("Order rejected")) {
