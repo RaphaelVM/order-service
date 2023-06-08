@@ -12,17 +12,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class RabbitMQConsumer {
-
     private static final Logger LOGGER = LoggerFactory.getLogger(RabbitMQConsumer.class);
-
     @Autowired
     private ProductService productService;
-
     @Autowired
     private UserService userService;
-
-    @Autowired
-
 
     @RabbitListener(queues = "product_json")
     public void receiveProduct(Product product) {

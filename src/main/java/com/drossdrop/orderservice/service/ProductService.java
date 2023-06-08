@@ -3,14 +3,14 @@ package com.drossdrop.orderservice.service;
 import com.drossdrop.orderservice.model.Product;
 import com.drossdrop.orderservice.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class ProductService {
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProductService.class);
     private final ProductRepository productRepository;
 
     public void createProduct(Product product) {
@@ -22,5 +22,6 @@ public class ProductService {
                 .build();
 
         productRepository.save(newProduct);
+        LOGGER.info(String.format("Product created...-> %s", newProduct.toString()));
     }
 }
