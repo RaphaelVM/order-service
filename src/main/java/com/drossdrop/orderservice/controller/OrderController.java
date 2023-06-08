@@ -5,6 +5,7 @@ import com.drossdrop.orderservice.dto.OrderResponse;
 import com.drossdrop.orderservice.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,8 +19,16 @@ public class OrderController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createOrder(@RequestBody OrderRequest orderRequest) {
-        orderService.createOrder(orderRequest);
+    public ResponseEntity<String> createOrder(@RequestBody OrderRequest orderRequest) {
+        String order = orderService.createOrder(orderRequest);
+        
+        if (order.contains("does not exist")) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Product does not exist");
+        } else if (order.contains("Order rejected")) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Order rejected due to insufficient stock");
+        }
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(order);
     }
 
     @GetMapping

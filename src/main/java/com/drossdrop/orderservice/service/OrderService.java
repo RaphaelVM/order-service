@@ -8,6 +8,8 @@ import com.drossdrop.orderservice.repository.ProductRepository;
 import com.drossdrop.orderservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -21,10 +23,13 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
+    private static final Logger LOGGER = LoggerFactory.getLogger(OrderService.class);
 
-    public void createOrder(OrderRequest orderRequest) {
+    public String createOrder(OrderRequest orderRequest) {
         String productId = orderRequest.getProductId();
-        productRepository.findById(productId).orElseThrow();
+        if(productRepository.findById(productId).isEmpty()) {
+            return String.format("Product with id %s does not exist", productId);
+        }
         BigDecimal totalPrice = productRepository.findById(productId).get().getPrice().multiply(BigDecimal.valueOf(orderRequest.getQuantity()));
 
         Order order = Order.builder()
@@ -35,7 +40,29 @@ public class OrderService {
                 .build();
 
         orderRepository.save(order);
-        log.info("Order is {} created", order.getId());
+        LOGGER.info(String.format("Order created...-> %s", order.toString()));
+        String stockMessage = checkStock(order.getId(), orderRequest.getQuantity());
+
+        return (String.format(stockMessage+": %s", order.toString()));
+    }
+
+    private String checkStock(String id, int quantity) {
+        Order order = orderRepository.findById(id).orElseThrow();
+        int stock = productRepository.findById(order.getProductId()).get().getStock();
+        if (stock >= quantity) {
+            updateOrder(id, "APPROVED");
+            return "Order approved";
+        } else {
+            updateOrder(id, "REJECTED");
+            return "Order rejected due to insufficient stock";
+        }
+    }
+
+    private void updateOrder(String id, String status) {
+        Order order = orderRepository.findById(id).orElseThrow();
+        order.setStatus(status);
+        orderRepository.save(order);
+        LOGGER.info(String.format("Order updated...-> %s", order.toString()));
     }
 
     public List<OrderResponse> getAllOrders() {
